@@ -42,6 +42,7 @@ public class Main {
                     }
                 }
             }
+            maxCount = Math.max(maxCount, count);
         }
 
         sb.append(maxCount);
