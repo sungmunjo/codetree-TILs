@@ -1,6 +1,4 @@
 import java.io.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -69,16 +67,15 @@ public class Main {
     }
     static boolean checkVal(int tempIndex, int tempNextIndex){
         boolean flag = true;
-        if((numList[tempNextIndex] + numList[tempIndex])%2 == 0){
-            int defaultValue = (numList[tempNextIndex] + numList[tempIndex])/2;
+            double defaultValue = (numList[tempNextIndex] + numList[tempIndex])/2.0;
             while(tempNextIndex < N && tempIndex >= 0){
-                if((defaultValue - numList[tempIndex]) != numList[tempNextIndex] - defaultValue){
+                if((defaultValue - numList[tempIndex]) != (numList[tempNextIndex] - defaultValue)){
                     flag = false;
                 }
                 tempNextIndex++;
                 tempIndex--;
             }
-        }
+
         return flag;
     }
 
