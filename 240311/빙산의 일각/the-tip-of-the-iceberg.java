@@ -29,7 +29,7 @@ public class Main {
         if (iceArray.length > 1 && iceArray[0] > iceArray[1]) {
             upperCase.add(iceArray[0]);
         }
-        if (iceArray.length > 1 && iceArray[N - 1] > iceArray[N - 2]) {
+        if (iceArray.length > 1 && iceArray[N - 1] >= iceArray[N - 2]) {
             upperCase.add(iceArray[N-1]);
         }
 
@@ -52,7 +52,7 @@ public class Main {
 
         int maxValue = -1;
 
-
+//        System.out.println(upperCase.size());
         for (int i = 0; i < upperCase.size(); i++) {
             int targetNum = upperCase.get(i) - 1;
 
