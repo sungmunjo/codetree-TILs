@@ -26,7 +26,9 @@ public class Main {
         }
         int upperCaseCount = 0;
         int lowerCaseCount = 0;
+        boolean wasHigh = false;
         if (iceArray.length > 1 && iceArray[0] > iceArray[1]) {
+            wasHigh = true;
             upperCase.add(iceArray[0]);
         }
         if (iceArray.length > 1 && iceArray[N - 1] >= iceArray[N - 2]) {
@@ -38,12 +40,14 @@ public class Main {
         }
 
         for (int i = 1; i < N - 1; i++) {
-            if (iceArray[i] <= iceArray[i - 1] && iceArray[i] < iceArray[i + 1]) {
+            if (wasHigh && iceArray[i] <= iceArray[i - 1] && iceArray[i] < iceArray[i + 1]) {
 //                lowerCase.set(lowerCaseCount++, iceArray[i]);
+                wasHigh = false;
                 lowerCase.add(iceArray[i]);
             }
-            if (iceArray[i] >= iceArray[i - 1] && iceArray[i] > iceArray[i + 1]) {
+            if (!wasHigh && iceArray[i] >= iceArray[i - 1] && iceArray[i] > iceArray[i + 1]) {
 //                upperCase.set(lowerCaseCount++, iceArray[i]);
+                wasHigh = true;
                 upperCase.add(iceArray[i]);
             }
         }
