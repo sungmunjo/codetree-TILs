@@ -86,6 +86,9 @@ public class Main {
             st = new StringTokenizer(br.readLine());
 
             int startK = Integer.parseInt(st.nextToken());
+            if(knights[startK].dead){
+                continue;
+            }
             int dir = Integer.parseInt(st.nextToken());
             visited[startK] = true;
             Q.add(startK);
@@ -144,7 +147,7 @@ public class Main {
                 }
             }
             startKi.r += dr[dir];
-            startKi.c +=dc[dir];
+            startKi.c += dc[dir];
 
             while (!saveQ.isEmpty()) {
                 int kIndex = saveQ.poll();
