@@ -54,12 +54,12 @@ public class Main {
             item.dead = false;
             item.r = Integer.parseInt(st.nextToken()) - 1;
             item.c = Integer.parseInt(st.nextToken()) - 1;
-            item.width = Integer.parseInt(st.nextToken());
             item.height = Integer.parseInt(st.nextToken());
+            item.width = Integer.parseInt(st.nextToken());
             item.life = Integer.parseInt(st.nextToken());
 
-            for (int r = 0; r < item.width; r++) {
-                for (int c = 0; c < item.height; c++) {
+            for (int r = 0; r < item.height; r++) {
+                for (int c = 0; c < item.width; c++) {
                     Kmap[item.r + r][item.c + c] = i;
                 }
             }
@@ -96,23 +96,24 @@ public class Main {
 
                 Knight tempK = knights[kINdex];
 
-                for (int r = 0; r < tempK.width; r++) {
-                    for (int c = 0; c < tempK.height; c++) {
+                for (int r = 0; r < tempK.height; r++) {
+                    for (int c = 0; c < tempK.width; c++) {
                         int nr = tempK.r + r;
                         int nc = tempK.c + c;
 
                         int mover = nr + dr[dir];
-                        int movec = nc + dc[dir];
 
-                        if (!checkMap(mover, movec) || map[mover][movec] == 2) {
+                        int tempc = nc + dc[dir];
+
+                        if (!checkMap(mover, tempc) || map[mover][tempc] == 2) {
                             flag = false;
                             break;
                         }
-                        if (Kmap[mover][movec] != 0 && !visited[Kmap[mover][movec]] && !knights[Kmap[mover][movec]].dead) {
-//                            System.out.println(order + " : " + Kmap[mover][movec]);
-                            Q.add(Kmap[mover][movec]);
-                            saveQ.add(Kmap[mover][movec]);
-                            visited[Kmap[mover][movec]] = true;
+                        if (Kmap[mover][tempc] != 0 && !visited[Kmap[mover][tempc]] && !knights[Kmap[mover][tempc]].dead) {
+//                            System.out.println(order + " : " + Kmap[mover][tempc]);
+                            Q.add(Kmap[mover][tempc]);
+                            saveQ.add(Kmap[mover][tempc]);
+                            visited[Kmap[mover][tempc]] = true;
                         }
 
                     }
@@ -130,13 +131,13 @@ public class Main {
             }
             int startIndex = saveQ.poll();
             Knight startKi = knights[startIndex];
-            for (int r = 0; r < startKi.width; r++) {
-                for (int c = 0; c < startKi.height; c++) {
+            for (int r = 0; r < startKi.height; r++) {
+                for (int c = 0; c < startKi.width; c++) {
                     Kmap[startKi.r + r][startKi.c + c] = 0;
                 }
             }
-            for (int r = 0; r < startKi.width; r++) {
-                for (int c = 0; c < startKi.height; c++) {
+            for (int r = 0; r < startKi.height; r++) {
+                for (int c = 0; c < startKi.width; c++) {
                     int nr = startKi.r + r + dr[dir];
                     int nc = startKi.c + c + dc[dir];
                     Kmap[nr][nc] = startIndex;
@@ -149,15 +150,15 @@ public class Main {
                 int kIndex = saveQ.poll();
 //                System.out.println(order + " : " + kIndex);
                 Knight tempK = knights[kIndex];
-                for (int r = 0; r < tempK.width; r++) {
-                    for (int c = 0; c < tempK.height; c++) {
+                for (int r = 0; r < tempK.height; r++) {
+                    for (int c = 0; c < tempK.width; c++) {
                         if(Kmap[tempK.r + r][tempK.c + c] == kIndex) {
                             Kmap[tempK.r + r][tempK.c + c] = 0;
                         }
                     }
                 }
-                for (int r = 0; r < tempK.width; r++) {
-                    for (int c = 0; c < tempK.height; c++) {
+                for (int r = 0; r < tempK.height; r++) {
+                    for (int c = 0; c < tempK.width; c++) {
                         int nr = tempK.r + r + dr[dir];
                         int nc = tempK.c + c + dc[dir];
                         Kmap[nr][nc] = kIndex;
@@ -165,6 +166,7 @@ public class Main {
                             tempK.life--;
                             damage[kIndex]++;
                         }
+                        
                         if(tempK.life <= 0){
                             tempK.dead = true;
                         }
