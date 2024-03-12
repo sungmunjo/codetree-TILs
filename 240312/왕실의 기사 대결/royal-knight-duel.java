@@ -151,14 +151,16 @@ public class Main {
                 Knight tempK = knights[kIndex];
                 for (int r = 0; r < tempK.width; r++) {
                     for (int c = 0; c < tempK.height; c++) {
-                        Kmap[tempK.r + r][tempK.c + c] = 0;
+                        if(Kmap[tempK.r + r][tempK.c + c] == kIndex) {
+                            Kmap[tempK.r + r][tempK.c + c] = 0;
+                        }
                     }
                 }
                 for (int r = 0; r < tempK.width; r++) {
                     for (int c = 0; c < tempK.height; c++) {
                         int nr = tempK.r + r + dr[dir];
                         int nc = tempK.c + c + dc[dir];
-                        Kmap[nr][nc] = startIndex;
+                        Kmap[nr][nc] = kIndex;
                         if(map[nr][nc] == 1){
                             tempK.life--;
                             damage[kIndex]++;
