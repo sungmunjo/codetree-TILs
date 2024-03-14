@@ -64,10 +64,10 @@ public class Main {
 
             }
 
-            // for(int i=0;i<20;i++){
-            //     System.out.print(tree[1][i] + " ");
-            // }
-            // System.out.println();
+//            for(int i=0;i<20;i++){
+//                System.out.print(tree[5][i] + " ");
+//            }
+//            System.out.println();
 
         }
         bw.write(sb.toString());
@@ -91,7 +91,7 @@ public class Main {
         tempPower = Math.min(tempPower, 21);
         int count = 1;
         if(onoff[aIndex]) {
-            while (tempIndex != 0 && onoff[tempIndex]) {
+            while (tempIndex != 0 ) {
                 int[] tempArray = tree[tempIndex];
                 for (int i = 0; i < recArray.length - count; i++) {
                     tempArray[i] -= recArray[i + count];
@@ -100,8 +100,13 @@ public class Main {
                     tempPower--;
                     tempArray[tempPower]--;
                 }
+                if(!onoff[tempIndex]){
+                    break;
+                }
                 tempIndex = parents[tempIndex];
                 count++;
+
+
             }
         }
 
@@ -111,7 +116,7 @@ public class Main {
         tempPower = Math.min(tempPower, 21);
         count = 1;
         if(onoff[bIndex]) {
-            while (tempIndex != 0 && onoff[tempIndex]) {
+            while (tempIndex != 0 ) {
                 int[] tempArray = tree[tempIndex];
                 for (int i = 0; i < recArray.length - count; i++) {
                     tempArray[i] -= recArray[i + count];
@@ -120,9 +125,14 @@ public class Main {
                     tempPower--;
                     tempArray[tempPower]--;
                 }
+                if(!onoff[tempIndex]){
+                    break;
+                }
                 tempIndex = parents[tempIndex];
                 count++;
+
             }
+
         }
 
         int temp = parents[aIndex];
@@ -135,7 +145,7 @@ public class Main {
         tempPower = Math.min(tempPower, 21);
         count = 1;
         if(onoff[bIndex]) {
-            while (tempIndex != 0 && onoff[tempIndex]) {
+            while (tempIndex != 0 ) {
                 int[] tempArray = tree[tempIndex];
                 for (int i = 0; i < recArray.length - count; i++) {
                     tempArray[i] += recArray[i + count];
@@ -144,8 +154,12 @@ public class Main {
                     tempPower--;
                     tempArray[tempPower]++;
                 }
+                if(!onoff[tempIndex]){
+                    break;
+                }
                 tempIndex = parents[tempIndex];
                 count++;
+
             }
         }
 
@@ -155,7 +169,7 @@ public class Main {
         tempPower = Math.min(tempPower, 21);
         count = 1;
         if(onoff[aIndex]){
-            while (tempIndex != 0 && onoff[tempIndex]) {
+            while (tempIndex != 0 ) {
                 int[] tempArray = tree[tempIndex];
                 for (int i = 0; i < recArray.length - count; i++) {
                     tempArray[i] += recArray[i + count];
@@ -164,8 +178,12 @@ public class Main {
                     tempPower--;
                     tempArray[tempPower]++;
                 }
+                if(!onoff[tempIndex]){
+                    break;
+                }
                 tempIndex = parents[tempIndex];
                 count++;
+
             }
         }
 
@@ -182,20 +200,28 @@ public class Main {
         int tempPower = power[changeIndex];
         tempPower = Math.min(tempPower, 21);
 
-        while (tempIndex != 0 && tempPower > 0 && onoff[tempIndex]) {
+        while (tempIndex != 0 && tempPower > 0 ) {
             int[] tempArray = tree[tempIndex];
             tempPower--;
             tempArray[tempPower]--;
+            if(!onoff[tempIndex]){
+                break;
+            }
             tempIndex = parents[tempIndex];
+
         }
 
         tempPower = Math.min(changePower, 21);
         tempIndex = parents[changeIndex];
-        while (tempIndex != 0 && tempPower > 0 && onoff[tempIndex]) {
+        while (tempIndex != 0 && tempPower > 0 ) {
             int[] tempArray = tree[tempIndex];
             tempPower--;
             tempArray[tempPower]++;
+            if(!onoff[tempIndex]){
+                break;
+            }
             tempIndex = parents[tempIndex];
+
         }
         power[changeIndex] = changePower;
 
@@ -207,7 +233,7 @@ public class Main {
         int tempPower = power[offIndex];
         tempPower = Math.min(tempPower, 21);
         int count = 1;
-        while (tempIndex != 0 && onoff[tempIndex]) {
+        while (tempIndex != 0 ) {
             int[] tempArray = tree[tempIndex];
             for (int i = 0; i < recArray.length - count; i++) {
                 if (onoff[offIndex]) {
@@ -225,8 +251,12 @@ public class Main {
                     tempArray[tempPower]++;
                 }
             }
+            if(!onoff[tempIndex]){
+                break;
+            }
             tempIndex = parents[tempIndex];
             count++;
+
         }
         onoff[offIndex] = !onoff[offIndex];
 
