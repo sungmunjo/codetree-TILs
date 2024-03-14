@@ -193,6 +193,7 @@ public class Main {
 
     private static void changePowerValue(int changeIndex, int changePower) {
         if(!onoff[changeIndex]){
+            power[changeIndex] = changePower;
             return;
         }
 
