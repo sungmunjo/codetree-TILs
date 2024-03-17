@@ -83,7 +83,9 @@ public class Main {
         customer.name = customerName;
         customer.toEat = customerToEat;
         customer.goHome = false;
-
+        if(susis.get(customerName) == null){
+            susis.put(customerName, new ArrayList<Susi>());
+        }
         customers.add(customer);
 
     }
