@@ -26,7 +26,7 @@ public class Main {
         }
     }
 
-    static class Customer{
+    static class Customer {
         int time;
         String name;
         int toEat;
@@ -49,11 +49,11 @@ public class Main {
         susiOnTable = new PriorityQueue<>();
         customers = new HashMap<>();
         susis = new HashMap<>();
-        for(int i=0;i<Q;i++){
+        for (int i = 0; i < Q; i++) {
             st = new StringTokenizer(br.readLine());
             int order = Integer.parseInt(st.nextToken());
 
-            switch(order){
+            switch (order) {
                 case 100:
                     int susiTime = Integer.parseInt(st.nextToken());
                     int susiLocation = Integer.parseInt(st.nextToken());
@@ -74,7 +74,7 @@ public class Main {
                 case 300:
                     int pictureTime = Integer.parseInt(st.nextToken());
 
-                    int [] calResult = takePicture(pictureTime);
+                    int[] calResult = takePicture(pictureTime);
 
                     sb.append(calResult[0] + " " + calResult[1] + "\n");
                     break;
@@ -97,18 +97,18 @@ public class Main {
         customer.name = customerName;
         customer.toEat = customerToEat;
         customer.goHome = false;
-        if(susis.get(customerName) != null){
+        if (susis.get(customerName) != null) {
             ArrayList<Susi> sList = susis.get(customerName);
 
-            for(int i=0;i<sList.size();i++){
+            for (int i = 0; i < sList.size(); i++) {
                 Susi susiItem = sList.get(i);
 
-                int currentLoc = (susiItem.location + customerTime - susiItem.time ) % L;
+                int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 int locDiff;
-                if(currentLoc > customerLocation){
+                if (currentLoc > customerLocation) {
                     customerLocation += L;
                     locDiff = customerLocation - currentLoc;
-                }else{
+                } else {
                     locDiff = customerLocation - currentLoc;
 
                 }
@@ -130,19 +130,20 @@ public class Main {
         newSusi.location = susiLocation;
         newSusi.name = susiName;
         newSusi.time = susiTime;
-        if(susis.get(susiName) == null){
+        if (susis.get(susiName) == null) {
             susis.put(susiName, new ArrayList<Susi>());
-        }else{
+        }
+        if(customers.get(susiName) != null){
             Customer cItem = customers.get(susiName);
-            if(cItem != null){
+            if (cItem != null) {
 
                 int currentLoc = newSusi.location;
                 int locDiff;
                 int customerLocation;
-                if(currentLoc > cItem.location){
+                if (currentLoc > cItem.location) {
                     customerLocation = L + cItem.location;
                     locDiff = customerLocation - currentLoc;
-                }else{
+                } else {
                     customerLocation = cItem.location;
                     locDiff = customerLocation - currentLoc;
 
@@ -154,14 +155,16 @@ public class Main {
 
             }
         }
+
+
         countSusi++;
         susis.get(susiName).add(newSusi);
     }
 
 
-    public static int[] takePicture(int pictureTime){
+    public static int[] takePicture(int pictureTime) {
         eatSusi(pictureTime);
-        int [] returnVal = new int[2];
+        int[] returnVal = new int[2];
         returnVal[0] = countCustomer;
         returnVal[1] = countSusi;
 
@@ -169,20 +172,20 @@ public class Main {
 
     }
 
-    public static void eatSusi(int pictureTime){
-        while (!susiOnTable.isEmpty()){
+    public static void eatSusi(int pictureTime) {
+        while (!susiOnTable.isEmpty()) {
             Susi tempSusi = susiOnTable.peek();
-            if(tempSusi.eatenTime > pictureTime){
+            if (tempSusi.eatenTime > pictureTime) {
                 break;
             }
 
             susiOnTable.poll();
             countSusi--;
 
-            Customer tempCustomer =  customers.get(tempSusi.name);
+            Customer tempCustomer = customers.get(tempSusi.name);
 
-            tempCustomer.toEat --;
-            if(tempCustomer.toEat <= 0){
+            tempCustomer.toEat--;
+            if (tempCustomer.toEat <= 0) {
                 tempCustomer.goHome = true;
                 countCustomer--;
             }
