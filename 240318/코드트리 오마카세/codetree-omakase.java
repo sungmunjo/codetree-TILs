@@ -22,7 +22,7 @@ public class Main {
 
         @Override
         public int compareTo(Susi o) {
-            return this.eatenTime - o.eatenTime;
+            return o.eatenTime - this.eatenTime;
         }
     }
 
@@ -100,17 +100,14 @@ public class Main {
         if (susis.get(customerName) != null) {
             ArrayList<Susi> sList = susis.get(customerName);
 
-            for (int i = 0; i < sList.size(); i++) {
-                Susi susiItem = sList.get(i);
-
+            for (Susi susiItem : sList) {
                 int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 int locDiff;
                 if (currentLoc > customerLocation) {
-                    customerLocation += L;
-                    locDiff = customerLocation - currentLoc;
+                    int tempLoc = customerLocation + L;
+                    locDiff = tempLoc - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
-
                 }
 
                 susiItem.eatenTime = customerTime + locDiff;
@@ -137,15 +134,13 @@ public class Main {
             Customer cItem = customers.get(susiName);
 
 
-            int currentLoc = newSusi.location;
             int locDiff;
-            int customerLocation;
-            if (currentLoc > cItem.location) {
-                customerLocation = L + cItem.location;
-                locDiff = customerLocation - currentLoc;
+            int customerLocation = cItem.location;
+            if (susiLocation > customerLocation) {
+                customerLocation += L;
+                locDiff = customerLocation - susiLocation;
             } else {
-                customerLocation = cItem.location;
-                locDiff = customerLocation - currentLoc;
+                locDiff = customerLocation - susiLocation;
             }
 
             newSusi.eatenTime = susiTime + locDiff;
