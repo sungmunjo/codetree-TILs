@@ -106,7 +106,7 @@ public class Main {
                 int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 int locDiff;
                 if (currentLoc > customerLocation) {
-                    customerLocation += L;
+                    customerLocation += (L - 1);
                     locDiff = customerLocation - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
@@ -141,7 +141,7 @@ public class Main {
                 int locDiff;
                 int customerLocation;
                 if (currentLoc > cItem.location) {
-                    customerLocation = L + cItem.location;
+                    customerLocation = (L-1) + cItem.location;
                     locDiff = customerLocation - currentLoc;
                 } else {
                     customerLocation = cItem.location;
