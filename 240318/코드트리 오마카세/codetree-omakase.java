@@ -106,7 +106,7 @@ public class Main {
                 int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 int locDiff;
                 if (currentLoc > customerLocation) {
-                    customerLocation += (L - 1);
+                    customerLocation += L;
                     locDiff = customerLocation - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
@@ -133,27 +133,26 @@ public class Main {
         if (susis.get(susiName) == null) {
             susis.put(susiName, new ArrayList<Susi>());
         }
-        if(customers.get(susiName) != null){
+        if (customers.get(susiName) != null) {
             Customer cItem = customers.get(susiName);
-            if (cItem != null) {
 
-                int currentLoc = newSusi.location;
-                int locDiff;
-                int customerLocation;
-                if (currentLoc > cItem.location) {
-                    customerLocation = (L-1) + cItem.location;
-                    locDiff = customerLocation - currentLoc;
-                } else {
-                    customerLocation = cItem.location;
-                    locDiff = customerLocation - currentLoc;
 
-                }
-
-                newSusi.eatenTime = susiTime + locDiff;
-
-                susiOnTable.add(newSusi);
-
+            int currentLoc = newSusi.location;
+            int locDiff;
+            int customerLocation;
+            if (currentLoc > cItem.location) {
+                customerLocation = L + cItem.location;
+                locDiff = customerLocation - currentLoc;
+            } else {
+                customerLocation = cItem.location;
+                locDiff = customerLocation - currentLoc;
             }
+
+            newSusi.eatenTime = susiTime + locDiff;
+
+            susiOnTable.add(newSusi);
+
+
         }
 
 
