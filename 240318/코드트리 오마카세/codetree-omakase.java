@@ -5,14 +5,25 @@ import java.util.*;
 public class Main {
     static int L, Q;
 
-    static ArrayList<Customer> customers;
+    static HashMap<String, Customer> customers;
     static HashMap<String, ArrayList<Susi>> susis;
-    static class Susi{
+    static PriorityQueue<Susi> susiOnTable;
+
+    static int countCustomer;
+    static int countSusi;
+
+    static class Susi implements Comparable<Susi> {
         int time;
         int location;
         boolean eaten;
         String name;
 
+        int eatenTime;
+
+        @Override
+        public int compareTo(Susi o) {
+            return this.eatenTime - o.eatenTime;
+        }
     }
 
     static class Customer{
@@ -33,7 +44,10 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         L = Integer.parseInt(st.nextToken());
         Q = Integer.parseInt(st.nextToken());
-        customers = new ArrayList<>();
+        countCustomer = 0;
+        countSusi = 0;
+        susiOnTable = new PriorityQueue<>();
+        customers = new HashMap<>();
         susis = new HashMap<>();
         for(int i=0;i<Q;i++){
             st = new StringTokenizer(br.readLine());
@@ -83,10 +97,30 @@ public class Main {
         customer.name = customerName;
         customer.toEat = customerToEat;
         customer.goHome = false;
-        if(susis.get(customerName) == null){
-            susis.put(customerName, new ArrayList<Susi>());
+        if(susis.get(customerName) != null){
+            ArrayList<Susi> sList = susis.get(customerName);
+
+            for(int i=0;i<sList.size();i++){
+                Susi susiItem = sList.get(i);
+
+                int currentLoc = susiItem.location + customerTime - susiItem.time;
+                int locDiff;
+                if(currentLoc > customerLocation){
+                    customerLocation += L;
+                    locDiff = customerLocation - currentLoc;
+                }else{
+                    locDiff = customerLocation - currentLoc;
+
+                }
+
+                susiItem.eatenTime = customerTime + locDiff;
+
+                susiOnTable.add(susiItem);
+            }
         }
-        customers.add(customer);
+
+        countCustomer++;
+        customers.put(customerName, customer);
 
     }
 
@@ -98,7 +132,29 @@ public class Main {
         newSusi.time = susiTime;
         if(susis.get(susiName) == null){
             susis.put(susiName, new ArrayList<Susi>());
+        }else{
+            Customer cItem = customers.get(susiName);
+            if(cItem != null){
+
+                int currentLoc = newSusi.location;
+                int locDiff;
+                int customerLocation;
+                if(currentLoc > cItem.location){
+                    customerLocation = L + cItem.location;
+                    locDiff = customerLocation - currentLoc;
+                }else{
+                    customerLocation = cItem.location;
+                    locDiff = customerLocation - currentLoc;
+
+                }
+
+                newSusi.eatenTime = susiTime + locDiff;
+
+                susiOnTable.add(newSusi);
+
+            }
         }
+        countSusi++;
         susis.get(susiName).add(newSusi);
     }
 
@@ -106,76 +162,29 @@ public class Main {
     public static int[] takePicture(int pictureTime){
         eatSusi(pictureTime);
         int [] returnVal = new int[2];
-
-        for(int i=0 ;i<customers.size();i++) {
-            Customer cItem = customers.get(i);
-            if(!cItem.goHome){
-                returnVal[0]++;
-            }
-        }
-
-//        Set<Map.Entry<String, ArrayList<Susi>>> item = susis.entrySet();
-        for(Map.Entry<String, ArrayList<Susi>> eitem : susis.entrySet()){
-            ArrayList<Susi> sList = eitem.getValue();
-            for(int i=0;i<sList.size();i++){
-                if(!sList.get(i).eaten){
-                    returnVal[1]++;
-                }
-            }
-        }
+        returnVal[0] = countCustomer;
+        returnVal[1] = countSusi;
 
         return returnVal;
 
     }
 
     public static void eatSusi(int pictureTime){
-        for(int i=0 ;i<customers.size();i++){
-            Customer cItem = customers.get(i);
+        while (!susiOnTable.isEmpty()){
+            Susi tempSusi = susiOnTable.peek();
+            if(tempSusi.eatenTime > pictureTime){
+                break;
+            }
 
-            ArrayList<Susi> susiList = susis.get(cItem.name);
+            susiOnTable.poll();
+            countSusi--;
 
-            for(int j=0;j<susiList.size();j++){
-                if(susiList.get(j).eaten)continue;
-                Susi sItem = susiList.get(j);
-                int startLocation ;
-                int timeDiff;
-                if(cItem.time > sItem.time){
-                    startLocation = (sItem.location + cItem.time - sItem.time) % L;
-                    timeDiff = pictureTime - cItem.time;
-                }else{
-                    startLocation = (sItem.location);
-                    timeDiff = pictureTime - sItem.time;
-                }
+            Customer tempCustomer =  customers.get(tempSusi.name);
 
-                int currentLocation  = (startLocation + timeDiff) % L;
-                if(timeDiff >= L){
-                    sItem.eaten = true;
-                    cItem.toEat--;
-                    if(cItem.toEat <= 0){
-                        cItem.goHome = true;
-                    }
-                    continue;
-                }
-
-                if(currentLocation > startLocation){
-                    if(cItem.location <= currentLocation && cItem.location >= startLocation){
-                        sItem.eaten = true;
-                        cItem.toEat--;
-                        if(cItem.toEat <= 0){
-                            cItem.goHome = true;
-                        }
-                    }
-                }else{
-                    if(cItem.location >= startLocation || cItem.location <= currentLocation){
-                        sItem.eaten = true;
-                        cItem.toEat--;
-                        if(cItem.toEat <= 0){
-                            cItem.goHome = true;
-                        }
-                    }
-                }
-
-
+            tempCustomer.toEat --;
+            if(tempCustomer.toEat <= 0){
+                tempCustomer.goHome = true;
+                countCustomer--;
             }
         }
     }
