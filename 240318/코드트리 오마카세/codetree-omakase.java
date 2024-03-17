@@ -103,7 +103,7 @@ public class Main {
             for(int i=0;i<sList.size();i++){
                 Susi susiItem = sList.get(i);
 
-                int currentLoc = susiItem.location + customerTime - susiItem.time;
+                int currentLoc = (susiItem.location + customerTime - susiItem.time ) % L;
                 int locDiff;
                 if(currentLoc > customerLocation){
                     customerLocation += L;
