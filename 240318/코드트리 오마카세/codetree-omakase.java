@@ -18,7 +18,7 @@ public class Main {
         boolean eaten;
         String name;
 
-        double eatenTime;
+        int eatenTime;
 
         @Override
         public int compareTo(Susi o) {
@@ -101,16 +101,16 @@ public class Main {
             ArrayList<Susi> sList = susis.get(customerName);
 
             for (Susi susiItem : sList) {
-                double currentLoc = ((double)susiItem.location + customerTime - susiItem.time) % L;
-                double locDiff;
+                int currentLoc = (susiItem.location + (int)customerTime - (int)susiItem.time) % L;
+                int locDiff;
                 if (currentLoc > customerLocation) {
-                    double tempLoc = customerLocation + L;
+                    int tempLoc = customerLocation + L;
                     locDiff = tempLoc - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
                 }
 
-                susiItem.eatenTime = customerTime + locDiff;
+                susiItem.eatenTime = (int)customerTime + locDiff;
 
                 susiOnTable.add(susiItem);
             }
@@ -134,16 +134,16 @@ public class Main {
             Customer cItem = customers.get(susiName);
 
 
-            double locDiff;
+            int locDiff;
             double customerLocation = cItem.location;
             if (susiLocation > customerLocation) {
                 customerLocation += L;
-                locDiff = customerLocation - susiLocation;
+                locDiff = (int)customerLocation - susiLocation;
             } else {
-                locDiff = customerLocation - susiLocation;
+                locDiff = (int)customerLocation - susiLocation;
             }
 
-            newSusi.eatenTime = susiTime + locDiff;
+            newSusi.eatenTime = (int)susiTime + locDiff;
 
             susiOnTable.add(newSusi);
 
