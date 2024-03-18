@@ -110,7 +110,7 @@ public class Main {
                     locDiff = customerLocation - currentLoc;
                 }
 
-                susiItem.eatenTime = (int)(customerTime + locDiff);
+                susiItem.eatenTime = customerTime + locDiff;
 
                 susiOnTable.add(susiItem);
             }
@@ -143,7 +143,7 @@ public class Main {
                 locDiff = customerLocation - susiLocation;
             }
 
-            newSusi.eatenTime = (int)(susiTime + locDiff);
+            newSusi.eatenTime = susiTime + locDiff;
 
             susiOnTable.add(newSusi);
 
