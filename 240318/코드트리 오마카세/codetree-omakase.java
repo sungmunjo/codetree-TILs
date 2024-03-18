@@ -101,7 +101,7 @@ public class Main {
             ArrayList<Susi> sList = susis.get(customerName);
 
             for (Susi susiItem : sList) {
-                double currentLoc = ((double)susiItem.location + customerTime - susiItem.time) % L;
+                int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 double locDiff;
                 if (currentLoc > customerLocation) {
                     double tempLoc = customerLocation + L;
