@@ -102,9 +102,9 @@ public class Main {
 
             for (Susi susiItem : sList) {
                 int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
-                double locDiff;
+                int locDiff;
                 if (currentLoc > customerLocation) {
-                    double tempLoc = customerLocation + L;
+                    int tempLoc = customerLocation + L;
                     locDiff = tempLoc - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
@@ -134,8 +134,8 @@ public class Main {
             Customer cItem = customers.get(susiName);
 
 
-            double locDiff;
-            double customerLocation = cItem.location;
+            int locDiff;
+            int customerLocation = cItem.location;
             if (susiLocation > customerLocation) {
                 customerLocation += L;
                 locDiff = customerLocation - susiLocation;
