@@ -104,8 +104,8 @@ public class Main {
                 int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
                 int locDiff;
                 if (currentLoc > customerLocation) {
-                    int tempLoc = customerLocation + L;
-                    locDiff = tempLoc - currentLoc;
+                    customerLocation += L;
+                    locDiff = customerLocation - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
                 }
