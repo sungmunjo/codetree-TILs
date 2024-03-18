@@ -134,12 +134,14 @@ public class Main {
             Customer cItem = customers.get(susiName);
 
 
+            int currentLoc = newSusi.location;
             int locDiff;
-            int customerLocation = cItem.location;
-            if (susiLocation > customerLocation) {
-                customerLocation += L;
+            int customerLocation;
+            if (currentLoc > cItem.location) {
+                customerLocation = L + cItem.location;
                 locDiff = customerLocation - susiLocation;
             } else {
+                customerLocation = cItem.location;
                 locDiff = customerLocation - susiLocation;
             }
 
