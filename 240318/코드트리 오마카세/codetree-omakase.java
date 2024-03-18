@@ -72,7 +72,7 @@ public class Main {
 
                     break;
                 case 300:
-                    double pictureTime = Integer.parseInt(st.nextToken());
+                    int pictureTime = Integer.parseInt(st.nextToken());
 
                     int[] calResult = takePicture(pictureTime);
 
@@ -156,7 +156,7 @@ public class Main {
     }
 
 
-    public static int[] takePicture(double pictureTime) {
+    public static int[] takePicture(int pictureTime) {
         eatSusi(pictureTime);
         int[] returnVal = new int[2];
         returnVal[0] = countCustomer;
@@ -166,7 +166,7 @@ public class Main {
 
     }
 
-    public static void eatSusi(double pictureTime) {
+    public static void eatSusi(int pictureTime) {
         while (!susiOnTable.isEmpty()) {
             Susi tempSusi = susiOnTable.peek();
             if (tempSusi.eatenTime > pictureTime) {
