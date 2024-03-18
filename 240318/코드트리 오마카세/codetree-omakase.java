@@ -13,21 +13,21 @@ public class Main {
     static int countSusi;
 
     static class Susi implements Comparable<Susi> {
-        int time;
+        double time;
         int location;
         boolean eaten;
         String name;
 
-        int eatenTime;
+        double eatenTime;
 
         @Override
         public int compareTo(Susi o) {
-            return o.eatenTime - this.eatenTime;
+            return (int) (this.eatenTime - o.eatenTime);
         }
     }
 
     static class Customer {
-        int time;
+        double time;
         String name;
         int toEat;
         int location;
@@ -55,7 +55,7 @@ public class Main {
 
             switch (order) {
                 case 100:
-                    int susiTime = Integer.parseInt(st.nextToken());
+                    double susiTime = Integer.parseInt(st.nextToken());
                     int susiLocation = Integer.parseInt(st.nextToken());
 
                     String susiName = st.nextToken();
@@ -63,7 +63,7 @@ public class Main {
                     makeSusi(susiTime, susiLocation, susiName);
                     break;
                 case 200:
-                    int customerTime = Integer.parseInt(st.nextToken());
+                    double customerTime = Integer.parseInt(st.nextToken());
                     int customerLocation = Integer.parseInt(st.nextToken());
                     String customerName = st.nextToken();
                     int customerToEat = Integer.parseInt(st.nextToken());
@@ -72,7 +72,7 @@ public class Main {
 
                     break;
                 case 300:
-                    int pictureTime = Integer.parseInt(st.nextToken());
+                    double pictureTime = Integer.parseInt(st.nextToken());
 
                     int[] calResult = takePicture(pictureTime);
 
@@ -90,7 +90,7 @@ public class Main {
 
     }
 
-    private static void customerIn(int customerTime, int customerLocation, String customerName, int customerToEat) {
+    private static void customerIn(double customerTime, int customerLocation, String customerName, int customerToEat) {
         Customer customer = new Customer();
         customer.time = customerTime;
         customer.location = customerLocation;
@@ -101,10 +101,10 @@ public class Main {
             ArrayList<Susi> sList = susis.get(customerName);
 
             for (Susi susiItem : sList) {
-                int currentLoc = (susiItem.location + customerTime - susiItem.time) % L;
-                int locDiff;
+                double currentLoc = ((double)susiItem.location + customerTime - susiItem.time) % L;
+                double locDiff;
                 if (currentLoc > customerLocation) {
-                    int tempLoc = customerLocation + L;
+                    double tempLoc = customerLocation + L;
                     locDiff = tempLoc - currentLoc;
                 } else {
                     locDiff = customerLocation - currentLoc;
@@ -121,7 +121,7 @@ public class Main {
 
     }
 
-    private static void makeSusi(int susiTime, int susiLocation, String susiName) {
+    private static void makeSusi(double susiTime, int susiLocation, String susiName) {
         Susi newSusi = new Susi();
         newSusi.eaten = false;
         newSusi.location = susiLocation;
@@ -134,8 +134,8 @@ public class Main {
             Customer cItem = customers.get(susiName);
 
 
-            int locDiff;
-            int customerLocation = cItem.location;
+            double locDiff;
+            double customerLocation = cItem.location;
             if (susiLocation > customerLocation) {
                 customerLocation += L;
                 locDiff = customerLocation - susiLocation;
@@ -156,7 +156,7 @@ public class Main {
     }
 
 
-    public static int[] takePicture(int pictureTime) {
+    public static int[] takePicture(double pictureTime) {
         eatSusi(pictureTime);
         int[] returnVal = new int[2];
         returnVal[0] = countCustomer;
@@ -166,14 +166,14 @@ public class Main {
 
     }
 
-    public static void eatSusi(int pictureTime) {
+    public static void eatSusi(double pictureTime) {
         while (!susiOnTable.isEmpty()) {
             Susi tempSusi = susiOnTable.peek();
             if (tempSusi.eatenTime > pictureTime) {
                 break;
             }
 
-            susiOnTable.poll();
+            tempSusi = susiOnTable.poll();
             countSusi--;
 
             Customer tempCustomer = customers.get(tempSusi.name);
