@@ -18,11 +18,11 @@ public class Main {
         boolean eaten;
         String name;
 
-        double eatenTime;
+        int eatenTime;
 
         @Override
         public int compareTo(Susi o) {
-            return (int) (this.eatenTime - o.eatenTime);
+            return this.eatenTime - o.eatenTime;
         }
     }
 
@@ -110,7 +110,7 @@ public class Main {
                     locDiff = customerLocation - currentLoc;
                 }
 
-                susiItem.eatenTime = customerTime + locDiff;
+                susiItem.eatenTime = (int)(customerTime + locDiff);
 
                 susiOnTable.add(susiItem);
             }
@@ -143,7 +143,7 @@ public class Main {
                 locDiff = customerLocation - susiLocation;
             }
 
-            newSusi.eatenTime = susiTime + locDiff;
+            newSusi.eatenTime = (int)(susiTime + locDiff);
 
             susiOnTable.add(newSusi);
 
