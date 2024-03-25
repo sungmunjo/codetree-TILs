@@ -1,3 +1,4 @@
+import javax.swing.text.html.parser.Entity;
 import java.io.*;
 import java.util.*;
 
@@ -6,7 +7,8 @@ public class Main {
     static int Q;
     static int N;
     static HashMap<String , Integer> limitTime;
-    static PriorityQueue<Problem> readyQ;
+    static HashMap<String, PriorityQueue<Problem>> readyQ;
+//    static PriorityQueue<Problem> readyQ;
     static PriorityQueue<Solver> readySolver;
     static Solver[] solvers;
 
@@ -96,7 +98,11 @@ public class Main {
     }
 
     private static void peekProblems(int peekTime) {
-        sb.append(readyQ.size() + "\n");
+        int count = 0;
+        for(String key : readyQ.keySet()){
+            count += readyQ.get(key).size();
+        }
+        sb.append(count + "\n");
     }
 
     private static void solvedProblem(int solvedTime, int solvedIndex) {
@@ -113,30 +119,40 @@ public class Main {
     }
 
     private static void solveProblem(int solveTime) {
-        Queue<Problem> saveP = new LinkedList<>();
 
-        while(!readyQ.isEmpty()){
-            Problem pitem = readyQ.poll();
-            if(limitTime.get(pitem.domain) <= solveTime){
-                if(readySolver.isEmpty()){
-                    while(!saveP.isEmpty()){
-                        readyQ.add(saveP.poll());
-                    }
-                    return;
+        if(readySolver.isEmpty()){
+            return;
+        }
+        String targetDomain = "";
+        int minRequestTime = 99999999;
+        int minPriority = 99999999;
+        for(String key : readyQ.keySet()){
+            PriorityQueue<Problem> list = readyQ.get(key);
+
+            Problem pitem = list.peek();
+//            System.out.println(pitem.url + " : " + limitTime.get(pitem.domain));
+            if(pitem != null && limitTime.get(pitem.domain) <= solveTime) {
+                if(pitem.priority < minPriority){
+                    minPriority = pitem.priority;
+                    minRequestTime = pitem.requestTime;
+                    targetDomain = pitem.domain;
+                }else if(pitem.priority == minPriority && pitem.requestTime < minRequestTime){
+                    minPriority = pitem.priority;
+                    minRequestTime = pitem.requestTime;
+                    targetDomain = pitem.domain;
                 }
-                Solver solver = readySolver.poll();
-                solver.solvingP = pitem;
-                solver.isPorcessing = true;
-                limitTime.put(pitem.domain, 99999999);
-                pitem.startTime = solveTime;
-//                System.out.println(solveTime + " : " + pitem.url);
-                break;
             }
-            saveP.add(pitem);
         }
-        while(!saveP.isEmpty()){
-            readyQ.add(saveP.poll());
+        if(minRequestTime == 99999999 && minPriority == 99999999){
+            return;
         }
+
+        Problem pitem = readyQ.get(targetDomain).poll();
+        Solver solver = readySolver.poll();
+        solver.solvingP = pitem;
+        solver.isPorcessing = true;
+        limitTime.put(pitem.domain, 99999999);
+        pitem.startTime = solveTime;
     }
 
     private static void requestProblem(int requestTime, int requestPriority, String requestUrl) {
@@ -147,15 +163,17 @@ public class Main {
         pitem.url = requestUrl;
         pitem.requestTime = requestTime;
         pitem.priority = requestPriority;
-
-        if(readyQ.contains(pitem)){
+        if(!readyQ.containsKey(pitem.domain)){
+            readyQ.put(pitem.domain,new PriorityQueue<>());
+        }
+        if(readyQ.get(pitem.domain).contains(pitem)){
             return;
         }
         if(!limitTime.containsKey(pitem.domain)){
             limitTime.put(pitem.domain, 0);
         }
 
-        readyQ.add(pitem);
+        readyQ.get(pitem.domain).add(pitem);
 
     }
 
@@ -170,7 +188,7 @@ public class Main {
             solvers[n].solvingP = null;
             readySolver.add(solvers[n]);
         }
-        readyQ = new PriorityQueue<>();
+        readyQ = new HashMap<>();
         limitTime = new HashMap<>();
 
         Problem pitem = new Problem();
@@ -180,7 +198,8 @@ public class Main {
         pitem.pid = Integer.parseInt(st.nextToken());
         pitem.priority = 1;
         pitem.requestTime = 0;
-        readyQ.add(pitem);
+        readyQ.put(pitem.domain, new PriorityQueue<Problem>());
+        readyQ.get(pitem.domain).add(pitem);
         limitTime.put(pitem.domain, 0);
 
     }
