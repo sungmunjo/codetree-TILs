@@ -47,8 +47,9 @@ public class Main {
             int maxScore = -1;
             int[] maxValues = new int [3];
             for(int turn = 0; turn < 3; turn ++){
-                for(int tempr = 1; tempr <= 3; tempr++){
-                    for(int tempc = 1; tempc <= 3; tempc++){
+                
+                for(int tempc = 1; tempc <= 3; tempc++){
+                    for(int tempr = 1; tempr <= 3; tempr++){
                         int [][] copyArray = copyArrayFromRoot(map);
                         for(int asd = 0 ;asd <= turn; asd++) {
                             copyArray = turn90Map(tempr, tempc, copyArray);
@@ -70,7 +71,7 @@ public class Main {
                 map = turn90Map(maxValues[0], maxValues[1], map);
             }
 //            System.out.println("2");
-//            printMap();
+            printMap();
             int totalScore = 0;
             int tempScore = -1;
             while (tempScore != 0){
@@ -79,10 +80,10 @@ public class Main {
                 if(tempScore != -1){
                     totalScore += tempScore;
                 }
-//                printMap();
+                printMap();
                 reFill(map);
 //                System.out.println("3");
-//                printMap();
+                printMap();
             }
             if(totalScore == 0){
                 break;
