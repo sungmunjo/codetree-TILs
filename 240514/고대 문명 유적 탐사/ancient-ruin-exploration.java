@@ -46,17 +46,19 @@ public class Main {
         for(int k = 0; k < K; k++){
             int maxScore = -1;
             int[] maxValues = new int [3];
-            for(int tempr = 1; tempr <= 3; tempr++){
-                for(int tempc = 1; tempc <= 3; tempc++){
-                    int [][] copyArray = copyArrayFromRoot(map);
-                    for(int turn = 0; turn < 3; turn ++){
-                        copyArray = turn90Map(tempr, tempc, copyArray);
-                        int tempScore = calculScore(copyArray, false);
-                        if(maxScore < tempScore) {
-                            maxScore = tempScore;
-                            maxValues[0] = tempr;
-                            maxValues[1] = tempc;
-                            maxValues[2] = turn;
+            for(int turn = 0; turn < 3; turn ++){
+                for(int tempr = 1; tempr <= 3; tempr++){
+                    for(int tempc = 1; tempc <= 3; tempc++){
+                        int [][] copyArray = copyArrayFromRoot(map);
+                        for(int asd = 0 ;asd <= turn; asd++) {
+                            copyArray = turn90Map(tempr, tempc, copyArray);
+                            int tempScore = calculScore(copyArray, false);
+                            if (maxScore < tempScore) {
+                                maxScore = tempScore;
+                                maxValues[0] = tempr;
+                                maxValues[1] = tempc;
+                                maxValues[2] = turn;
+                            }
                         }
                     }
                 }
@@ -151,9 +153,12 @@ public class Main {
 
                 }
                 if(count >= 3){
-                    while(!saveQ.isEmpty()){
-                        int [] tempLoc = saveQ.poll();
-                        copyArray[tempLoc[0]][tempLoc[1]] = 0;
+                    if(deleteFlag){
+
+                        while(!saveQ.isEmpty()){
+                            int [] tempLoc = saveQ.poll();
+                            copyArray[tempLoc[0]][tempLoc[1]] = 0;
+                        }
                     }
                     score+= count;
                 }
@@ -181,8 +186,8 @@ public class Main {
 
         for(int r=0;r<3;r++){
             for(int c=0;c<3;c++){
-                int tempMapR = tempr + r - 1;
-                int tempMapC = tempc + c - 1;
+                int tempMapR = tempr + (r - 1);
+                int tempMapC = tempc + (c - 1);
                 int replaceR = tempr + 1 - c;
                 int replaceC = tempc + r - 1;
                 tempMap[tempMapR][tempMapC] = copyArray[replaceR][replaceC];
