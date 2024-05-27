@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 public class Main {
     static int N;
     static int M;
-
+    static boolean existFlag[];
     static int minLinkVal[][];
     static int minLength[];
     static int startIndex;
@@ -95,9 +95,18 @@ public class Main {
     }
 
     private static void sellProduct() {
+        if(productList.size() == 0){
+            sb.append("-1\n");
+            return;
+        }
+//        System.out.println(productList.size());
         Product tempP = productList.poll();
-        while(deleteFlag[tempP.id - 1]){
+        while(tempP != null && deleteFlag[tempP.id - 1]){
             tempP = productList.poll();
+        }
+        if(tempP == null){
+            sb.append("-1\n");
+            return;
         }
         if(tempP.price - tempP.dist < 0){
             productList.add(tempP);
@@ -110,10 +119,14 @@ public class Main {
     }
 
     private static void deleteProduct(int delId) {
-        deleteFlag[delId - 1] = true;
+        if(existFlag[delId - 1]){
+            deleteFlag[delId - 1] = true;
+        }
+
     }
 
     private static void createProduct(int id, int price, int dest) {
+        existFlag[id - 1] = true;
         Product p = new Product();
         p.id = id;
         p.dist = minLength[dest];
@@ -158,7 +171,8 @@ public class Main {
         minLength = new int[N];
         startIndex = 0;
         productList = new PriorityQueue<>();
-        deleteFlag = new boolean[N];
+        existFlag = new boolean[30000];
+        deleteFlag = new boolean[30000];
         for (int r = 0; r < N; r++) {
 
             for (int c = 0; c < N; c++) {
