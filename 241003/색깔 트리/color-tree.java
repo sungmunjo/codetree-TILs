@@ -107,14 +107,14 @@ public class Main {
 	private static int searchColor(int searchId) {
 		Node targetNode = nodes.get(searchId);
 		int currentColor = targetNode.color;
-		int currentIndex = targetNode.updateTime;
+		int currentIndex = targetNode.colorChangeTime;
 		int curretId = targetNode.id;
 		while(curretId != -1) {
 			targetNode = nodes.get(curretId);
 			
-			if(targetNode.updateTime > currentIndex) {
+			if(targetNode.colorChangeTime > currentIndex) {
 				currentColor = targetNode.color;
-				currentIndex = targetNode.updateTime;
+				currentIndex = targetNode.colorChangeTime;
 			}
 			curretId = targetNode.pid;
 		}
@@ -195,6 +195,7 @@ public class Main {
 		item.maxDepth = maxDepth;
 		item.createTime = orderIndex;
 		item.updateTime = orderIndex;
+		item.colorChangeTime = orderIndex;
 		item.childColors = new HashMap<>();
 		boolean [] tempColor = new boolean [6];
 		tempColor[color] = true;
