@@ -141,9 +141,9 @@ public class Main {
 		int lastIndex = targetId;
 		while(nodeIndex != -1) {
 			Node tempNode = nodes.get(nodeIndex);
-			tempColor[tempNode.color] = true;
 			boolean [] insertColorList = tempColor.clone();
 			tempNode.childColors.put(lastIndex, insertColorList);
+			tempColor[tempNode.color] = true;
 			int score = 0;
 			boolean[] insertColor = new boolean[6];
 			insertColor[tempNode.color] = true;
@@ -151,17 +151,11 @@ public class Main {
 				boolean [] tempboolList = tempNode.childColors.get(key);
 				
 				for(int i = 0; i < 6; i++) {
-//					if(targetId == 4 && changeColor == 4) {
-//						System.out.print(tempNode.id + " : " + tempboolList[i] + " ");
-//					}
 					if(tempboolList[i]) {
 						insertColor[i] = true;
 						tempColor[i] = true;
 					}
 				}
-//				if(targetId == 4 && changeColor == 4) {
-//					System.out.println();
-//				}
 			}
 			
 			for(int i = 0; i < 6; i++) {
@@ -169,11 +163,6 @@ public class Main {
 					score++;
 				}
 			}
-			
-			
-//			if(targetId == 4 && changeColor == 4) {
-//				System.out.print(tempNode.id + " : " + score + " ");
-//			}
 			
 			tempNode.childColor = insertColor;
 			tempNode.score = score;
@@ -208,13 +197,9 @@ public class Main {
 			int tempPid = pId;
 			while(tempPid != -1) {
 				Node tempNode = nodes.get(tempPid);
-
-				
 				if(tempNode.maxDepth <= depth) {
 					available = false;
 				}
-				
-				
 				tempPid = tempNode.pid;
 				depth++;
 			}
