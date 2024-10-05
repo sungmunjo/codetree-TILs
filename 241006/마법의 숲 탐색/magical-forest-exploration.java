@@ -84,7 +84,7 @@ public class Main {
 				
 			}
 			
-			if(currentR < 3) {
+			if(currentR < 4) {
 				resetMap();
 				continue;
 			}
@@ -111,9 +111,9 @@ public class Main {
 	private static void showMap() {
 		for(int r=0;r<R + 3; r++) {
 			for(int c=0;c<C;c++) {
-//				System.out.print(map[r][c] + " ");
+				System.out.print(map[r][c] + " ");
 			}
-//			System.out.println();
+			System.out.println();
 		}
 	}
 
