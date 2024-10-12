@@ -60,7 +60,7 @@ public class Main {
 	static HashMap<Integer, List<Link>> linkList;
 	
 	public static void main(String args[]) throws NumberFormatException, IOException {
-		afterChange = true;
+		
 		products = new PriorityQueue();
 		createdFlag = new boolean[30001];
 		deletedFlag = new boolean[30001];
@@ -123,7 +123,7 @@ public class Main {
 			newP.cost = costList[destId];
 			return newP;
 		}
-		
+		boolean[] visited = new boolean[N];
 		costList = new int [N + 1];
 		for(int i=0;i<N + 1;i++) {
 			costList[i] = 987654321;
@@ -142,6 +142,7 @@ public class Main {
 			if(pollItem.cost > costList[pollItem.cityId]) {
 				continue;
 			}
+			visited[pollItem.cityId] = true;
 			
 //			if(pollItem.cityId == destId) {
 //				break;
@@ -151,8 +152,7 @@ public class Main {
 				int fromCity = item.fromCity;
 				int toCity = item.toCity;
 				int cost = item.cost;
-				
-				if((cost + costList[fromCity] < costList[toCity])) {
+				if(!visited[toCity] && (cost + costList[fromCity] < costList[toCity])) {
 					costList[toCity] = cost + costList[fromCity];
 					CompareCity newItem = new CompareCity();
 					newItem.cityId = toCity;
@@ -162,7 +162,7 @@ public class Main {
 				}
 			}
 		}
-		
+		afterChange = false;
 		Product newP = new Product();
 		newP.revenue = revenue;
 		newP.dest = destId;
@@ -184,7 +184,6 @@ public class Main {
 			
 			newQ.add(changeVal);
 		}
-		afterChange = false;
 		products = newQ;
 	}
 
@@ -227,6 +226,7 @@ public class Main {
 	private static void makeMap(StringTokenizer st) {
 		costMap = new int[N][N];
 		costList = new int [N + 1];
+		afterChange = true;
 		for (int m = 0; m < M; m++) {
 			int fromCity = Integer.parseInt(st.nextToken());
 			int toCity = Integer.parseInt(st.nextToken());
