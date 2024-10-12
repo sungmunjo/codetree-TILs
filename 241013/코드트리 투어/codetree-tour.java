@@ -171,23 +171,22 @@ public class Main {
 
 	private static int getBestProduct() {
 		int bestId = -1;
-		Queue<Product> tempQ = new LinkedList<>();
 		while(bestId == -1) {
 			if(products.size() == 0)break;
 			
-			Product item = products.peek();
+			Product item = products.poll();
+			while(item != null && deletedFlag[item.id]) {
+				item = products.poll();
+			}
 			
 			if(!deletedFlag[item.id] && (item.revenue - item.cost) >= 0) {
-				item = products.poll();
 				bestId = item.id;
-			}else if(deletedFlag[item.id]) {
-				products.poll();
+			}else if(!deletedFlag[item.id]) {
+				products.add(item);
+				break;
 			}else {
-				tempQ.add(products.poll());
+				break;
 			}
-		}
-		while(!tempQ.isEmpty()) {
-			products.add(tempQ.poll());
 		}
 		
 		return bestId;
