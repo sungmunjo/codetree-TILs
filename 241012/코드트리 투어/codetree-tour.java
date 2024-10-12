@@ -40,6 +40,7 @@ public class Main {
 		int toCity;
 		int cost;
 	}
+	static boolean afterChange;
 
 	static int[][] costMap;
 
@@ -55,13 +56,15 @@ public class Main {
 	static boolean[] deletedFlag;
 
 	static int fromCityId;
-	
+	static int costList[];
 	static HashMap<Integer, List<Link>> linkList;
 	
 	public static void main(String args[]) throws NumberFormatException, IOException {
+		afterChange = true;
 		products = new PriorityQueue();
 		createdFlag = new boolean[30001];
 		deletedFlag = new boolean[30001];
+		
 		fromCityId = 0;
 		linkList = new HashMap<>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -112,7 +115,16 @@ public class Main {
 	}
 	
 	private static Product getBestProcuct(int productId, int revenue, int destId) {
-		int costList[] = new int [N];
+		if(!afterChange) {
+			Product newP = new Product();
+			newP.revenue = revenue;
+			newP.dest = destId;
+			newP.id = productId;
+			newP.cost = costList[destId];
+			return newP;
+		}
+		
+		costList = new int [N];
 		for(int i=0;i<N;i++) {
 			costList[i] = 987654321;
 		}
@@ -129,6 +141,10 @@ public class Main {
 			
 			if(pollItem.cost > costList[pollItem.cityId]) {
 				continue;
+			}
+			
+			if(pollItem.cityId == destId) {
+				break;
 			}
 			
 			for(Link item : list) {
@@ -156,6 +172,7 @@ public class Main {
 	}
 
 	private static void changeStartPos(int changeStartId) {
+		afterChange = true;
 		fromCityId = changeStartId;
 		
 		Queue<Product> newQ = new PriorityQueue<>();
@@ -167,7 +184,7 @@ public class Main {
 			
 			newQ.add(changeVal);
 		}
-		
+		afterChange = false;
 		products = newQ;
 	}
 
@@ -209,7 +226,7 @@ public class Main {
 
 	private static void makeMap(StringTokenizer st) {
 		costMap = new int[N][N];
-		
+		costList = new int [N];
 		for (int m = 0; m < M; m++) {
 			int fromCity = Integer.parseInt(st.nextToken());
 			int toCity = Integer.parseInt(st.nextToken());
