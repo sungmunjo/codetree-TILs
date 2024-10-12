@@ -121,26 +121,22 @@ public class Main {
 		PriorityQueue<CompareCity> pq = new PriorityQueue<>();
 		pq.add(qItem);
 		for(int j=0;j<N;j++) {
-			if(pq.isEmpty()) {
-				break;
-			}
-			
-			CompareCity pollItem = pq.poll();
-			
-			while(pollItem != null && (pollItem.cost > costList[pollItem.cityId] ) ) {
-				pollItem = pq.poll();
-			}
-			
-			if(pollItem == null) {
-				break;
-			}
-			visited[pollItem.cityId] = true;
+			int minValIndex = fromCityId;
+            int actualMinVal = 987654321;
+
+            for (int v = 0; v < N; v++) {
+                if (!visited[v] && costList[v] < actualMinVal) {
+                    actualMinVal = costList[v];
+                    minValIndex = v;
+                }
+            }
+			visited[minValIndex] = true;
 			
 			for(int i=0;i<N;i++) {
-				if(costMap[pollItem.cityId][i] != 987654321) {
-					int fromCity = pollItem.cityId;
+				if(costMap[minValIndex][i] != 987654321) {
+					int fromCity = minValIndex;
 					int toCity = i;
-					int cost = costMap[pollItem.cityId][i];
+					int cost = costMap[minValIndex][i];
 					if(!visited[toCity] && (cost + costList[fromCity] < costList[toCity])) {
 						costList[toCity] = cost + costList[fromCity];
 						CompareCity newItem = new CompareCity();
