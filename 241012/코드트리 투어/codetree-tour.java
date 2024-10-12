@@ -143,7 +143,9 @@ public class Main {
 				continue;
 			}
 			visited[pollItem.cityId] = true;
-			
+			if(list == null) {
+				continue;
+			}
 //			if(pollItem.cityId == destId) {
 //				break;
 //			}
