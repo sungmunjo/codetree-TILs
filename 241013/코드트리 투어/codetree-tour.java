@@ -127,14 +127,14 @@ public class Main {
 			
 			CompareCity pollItem = pq.poll();
 			
-			while(pollItem != null && (pollItem.cost > costList[pollItem.cityId] || visited[pollItem.cost]) ) {
+			while(pollItem != null && (pollItem.cost > costList[pollItem.cityId] ) ) {
 				pollItem = pq.poll();
-				
 			}
 			
 			if(pollItem == null) {
 				break;
 			}
+			visited[pollItem.cityId] = true;
 			
 			for(int i=0;i<N;i++) {
 				if(costMap[pollItem.cityId][i] != 987654321) {
