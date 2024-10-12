@@ -179,6 +179,10 @@ public class Main {
 				item = products.poll();
 			}
 			
+			if(item == null) {
+				break;
+			}
+			
 			if(!deletedFlag[item.id] && (item.revenue - item.cost) >= 0) {
 				bestId = item.id;
 			}else if(!deletedFlag[item.id]) {
