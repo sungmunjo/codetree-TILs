@@ -35,11 +35,6 @@ public class Main {
 		}
 	}
 	
-	static class Link {
-		int fromCity;
-		int toCity;
-		int cost;
-	}
 
 	static int[][] costMap;
 
@@ -56,7 +51,7 @@ public class Main {
 
 	static int fromCityId;
 	static int costList[];
-	static HashMap<Integer, List<Link>> linkList;
+	
 	
 	public static void main(String args[]) throws NumberFormatException, IOException {
 		
@@ -65,7 +60,6 @@ public class Main {
 		deletedFlag = new boolean[30001];
 		
 		fromCityId = 0;
-		linkList = new HashMap<>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -128,32 +122,29 @@ public class Main {
 		while(!pq.isEmpty()) {
 			CompareCity pollItem = pq.poll();
 			
-			List<Link> list = linkList.get(pollItem.cityId);
 			
 			if(pollItem.cost > costList[pollItem.cityId]) {
 				continue;
 			}
 			visited[pollItem.cityId] = true;
-			if(list == null) {
-				continue;
-			}
-//			if(pollItem.cityId == destId) {
-//				break;
-//			}
 			
-			for(Link item : list) {
-				int fromCity = item.fromCity;
-				int toCity = item.toCity;
-				int cost = item.cost;
-				if(!visited[toCity] && (cost + costList[fromCity] < costList[toCity])) {
-					costList[toCity] = cost + costList[fromCity];
-					CompareCity newItem = new CompareCity();
-					newItem.cityId = toCity;
-					newItem.cost = costList[toCity];
-					
-					pq.add(newItem);
+			for(int i=0;i<N;i++) {
+				if(costMap[pollItem.cityId][i] != 987654321) {
+					int fromCity = pollItem.cityId;
+					int toCity = i;
+					int cost = costMap[pollItem.cityId][i];
+					if(!visited[toCity] && (cost + costList[fromCity] < costList[toCity])) {
+						costList[toCity] = cost + costList[fromCity];
+						CompareCity newItem = new CompareCity();
+						newItem.cityId = toCity;
+						newItem.cost = costList[toCity];
+						
+						pq.add(newItem);
+					}
 				}
 			}
+			
+			
 		}
 	}
 
@@ -222,30 +213,19 @@ public class Main {
 	private static void makeMap(StringTokenizer st) {
 		costMap = new int[N][N];
 		costList = new int [N + 1];
+		
+		
+		for(int r=0;r<N;r++) {
+			for(int c=0;c<N;c++) {
+				costMap[r][c] = 987654321;
+			}
+		}
+		
 		for (int m = 0; m < M; m++) {
 			int fromCity = Integer.parseInt(st.nextToken());
 			int toCity = Integer.parseInt(st.nextToken());
 			int cost = Integer.parseInt(st.nextToken());
 			
-			if(linkList.get(fromCity) == null) {
-				linkList.put(fromCity, new ArrayList<>());
-			}
-			if(linkList.get(toCity) == null) {
-				linkList.put(toCity, new ArrayList<>());
-			}
-			Link item = new Link();
-			item.fromCity = fromCity;
-			item.toCity = toCity;
-			item.cost = cost;
-			
-			linkList.get(fromCity).add(item);
-			
-			Link item2 = new Link();
-			item2.fromCity = toCity;
-			item2.toCity = fromCity;
-			item2.cost = cost;
-			
-			linkList.get(toCity).add(item2);
 			
 			if(costMap[fromCity][toCity] > cost) {
 				costMap[fromCity][toCity] = cost;
