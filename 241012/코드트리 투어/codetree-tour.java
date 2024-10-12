@@ -124,8 +124,8 @@ public class Main {
 			return newP;
 		}
 		
-		costList = new int [N];
-		for(int i=0;i<N;i++) {
+		costList = new int [N + 1];
+		for(int i=0;i<N + 1;i++) {
 			costList[i] = 987654321;
 		}
 		costList[fromCityId] = 0;
@@ -143,9 +143,9 @@ public class Main {
 				continue;
 			}
 			
-			if(pollItem.cityId == destId) {
-				break;
-			}
+//			if(pollItem.cityId == destId) {
+//				break;
+//			}
 			
 			for(Link item : list) {
 				int fromCity = item.fromCity;
@@ -226,7 +226,7 @@ public class Main {
 
 	private static void makeMap(StringTokenizer st) {
 		costMap = new int[N][N];
-		costList = new int [N];
+		costList = new int [N + 1];
 		for (int m = 0; m < M; m++) {
 			int fromCity = Integer.parseInt(st.nextToken());
 			int toCity = Integer.parseInt(st.nextToken());
