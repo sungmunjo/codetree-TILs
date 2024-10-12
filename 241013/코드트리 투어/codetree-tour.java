@@ -117,16 +117,24 @@ public class Main {
 		CompareCity qItem = new CompareCity();
 		qItem.cityId = fromCityId;
 		qItem.cost = 0;
+		visited[fromCityId] = true;
 		PriorityQueue<CompareCity> pq = new PriorityQueue<>();
 		pq.add(qItem);
-		while(!pq.isEmpty()) {
+		for(int j=0;j<N;j++) {
+			if(pq.isEmpty()) {
+				break;
+			}
+			
 			CompareCity pollItem = pq.poll();
 			
-			
-			if(pollItem.cost > costList[pollItem.cityId]) {
-				continue;
+			while(pollItem != null && (pollItem.cost > costList[pollItem.cityId] || visited[pollItem.cost]) ) {
+				pollItem = pq.poll();
+				
 			}
-			visited[pollItem.cityId] = true;
+			
+			if(pollItem == null) {
+				break;
+			}
 			
 			for(int i=0;i<N;i++) {
 				if(costMap[pollItem.cityId][i] != 987654321) {
@@ -143,8 +151,6 @@ public class Main {
 					}
 				}
 			}
-			
-			
 		}
 	}
 
