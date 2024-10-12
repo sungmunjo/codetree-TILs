@@ -51,6 +51,7 @@ public class Main {
 
 	static Queue<Product> products;
 
+	static boolean[] createdFlag;
 	static boolean[] deletedFlag;
 
 	static int fromCityId;
@@ -59,6 +60,7 @@ public class Main {
 	
 	public static void main(String args[]) throws NumberFormatException, IOException {
 		products = new PriorityQueue();
+		createdFlag = new boolean[30001];
 		deletedFlag = new boolean[30001];
 		fromCityId = 0;
 		linkList = new HashMap<>();
@@ -194,12 +196,14 @@ public class Main {
 	}
 
 	private static void deleteProduct(int deleteId) {
-		deletedFlag[deleteId] = true;
+		if(createdFlag[deleteId]) {
+			deletedFlag[deleteId] = true;
+		}
 	}
 
 	private static void makeProduct(int productId, int revenue, int destId) {
 		Product newP = getBestProcuct(productId, revenue, destId);
-		
+		createdFlag[newP.id] = true;
 		products.add(newP);
 	}
 
