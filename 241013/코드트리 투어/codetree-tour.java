@@ -230,6 +230,10 @@ public class Main {
 			if(costMap[fromCity][toCity] > cost) {
 				costMap[fromCity][toCity] = cost;
 			}
+			if(costMap[toCity][fromCity] > cost) {
+				costMap[toCity][fromCity] = cost;
+			}
+			
 		}
 		getBestProcuct();
 	}
