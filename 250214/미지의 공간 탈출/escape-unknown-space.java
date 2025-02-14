@@ -140,7 +140,7 @@ public class Main {
 		LinkedList<int[]> saveList = new LinkedList<int[]>();
 		Q.add(temp);
 		saveList.add(new int [] {temp.divition, temp.row, temp.col});
-		int count = 0;
+		int count = -1;
 
 		while (!Q.isEmpty()) {
 
@@ -149,7 +149,7 @@ public class Main {
 			for (int i = 0; i < Qsize; i++) {
 				location pullOut = Q.poll();
 				if(pullOut.divition == 5 && pullOut.row == dest.row && pullOut.col == dest.col) {
-					return count - 1;
+					return count;
 				}
 				
 				for(int dis = 0; dis < disableList.length; dis++) {
