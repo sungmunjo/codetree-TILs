@@ -40,6 +40,7 @@ public class Main {
 		int col;
 		int dir;
 		int v;
+		boolean spread;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -111,6 +112,7 @@ public class Main {
 			item.col = Integer.parseInt(st.nextToken());
 			item.dir = Integer.parseInt(st.nextToken());
 			item.v = Integer.parseInt(st.nextToken());
+			item.spread = true;
 			map[5][item.row][item.col] = 1;
 			disableList[i] = item;
 		}
@@ -154,6 +156,9 @@ public class Main {
 				
 				for(int dis = 0; dis < disableList.length; dis++) {
 					disableBlock item = disableList[dis];
+					if(!item.spread) {
+						continue;
+					}
 					if(count % item.v == 0) {
 						int length = count / item.v;
 						location tempLoc = new location();
@@ -162,7 +167,14 @@ public class Main {
 						tempLoc.divition = 5;
 						
 						if(checkLocation(tempLoc)) {
-							map[tempLoc.divition][tempLoc.row][tempLoc.col] = 1;
+							if(tempLoc.divition == 5 && tempLoc.row == dest.row && tempLoc.col == dest.col) {
+								item.spread = false;
+							}else if(map[tempLoc.divition][tempLoc.row][tempLoc.col] == 1) {
+								item.spread = false;
+							}else {
+								map[tempLoc.divition][tempLoc.row][tempLoc.col] = 1;
+							}
+							
 						}
 					}
 				}
@@ -180,12 +192,8 @@ public class Main {
 						Q.add(nextLocation);
 						saveList.add(new int [] {nextLocation.divition, nextLocation.row, nextLocation.col});
 					}
-					
-					
 				}
-
 			}
-
 		}
 		return -1;
 
