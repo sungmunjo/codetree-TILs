@@ -187,10 +187,6 @@ public class Main {
 			}
 
 		}
-		
-		for(int i = 0; i < saveList.size(); i++) {
-			System.out.println(saveList.get(i)[0] + " " + saveList.get(i)[1] + " " + saveList.get(i)[2] + " " );
-		}
 		return -1;
 
 	}
