@@ -17,7 +17,9 @@ public class Main {
 	static Tile map[][];
 
 	static int dr[] = { -1, 1, 0, 0 };
+	static int dr2[] = { 0, 0, -1, 1 };
 	static int dc[] = { 0, 0, -1, 1 };
+	static int dc2[] = { -1, 1, 0, 0 };
 
 	static int lookDr[][] = { { -1, -1, -1 }, { 1, 1, 1 }, { -1, 0, 1 }, { -1, 0, 1 } };
 	static int lookDc[][] = { { -1, 0, 1 }, { -1, 0, 1 }, { -1, -1, -1 }, { 1, 1, 1 } };
@@ -171,17 +173,18 @@ public class Main {
 //			System.out.println();
 			int stunCount = watch();
 
-			int MoveCount = armiMove();
-			MoveCount += armiMove();
+			int MoveCount = armiMove(1);
+			MoveCount += armiMove(2);
 			int killCount = killArmi();
-			if(moveSeq == toMove.size()) {
+
+//			System.out.print(MoveCount + " " + stunCount + " " + killCount + "\n");
+			if (moveSeq == toMove.size()) {
 				sb.append("0");
-			}else{
-				
+			} else {
+
 				sb.append(MoveCount + " " + stunCount + " " + killCount + "\n");
 			}
 		}
-
 
 	}
 
@@ -197,15 +200,23 @@ public class Main {
 		return killCount;
 	}
 
-	private static int armiMove() {
+	private static int armiMove(int seq) {
 		int moveCount = 0;
 		for (Person item : armi) {
 			if (!item.died && dontMove[item.r][item.c] == 0) {
 				int minDistance = Math.abs(currentLoc.r - item.r) + Math.abs(currentLoc.c - item.c);
 				int minDir = -1;
 				for (int d = 0; d < 4; d++) {
-					int nr = item.r + dr[d];
-					int nc = item.c + dc[d];
+					int nr = item.r;
+					int nc = item.c;
+					
+					if(seq == 1) {
+						nr += dr[d];
+						nc += dc[d];
+					}else {
+						nr += dr2[d];
+						nc += dc2[d];
+					}
 
 					if (checkMap(nr, nc) && dontMove[nr][nc] != 1) {
 						int distacne = Math.abs(nr - currentLoc.r) + Math.abs(nc - currentLoc.c);
@@ -217,8 +228,16 @@ public class Main {
 					}
 				}
 				if (minDir != -1) {
-					int toMoveR = item.r + dr[minDir];
-					int toMoveC = item.c + dc[minDir];
+					int toMoveR = item.r ;
+					int toMoveC = item.c ;
+					if(seq == 1) {
+						toMoveR += dr[minDir];
+						toMoveC += dc[minDir];
+					}else {
+						toMoveR += dr2[minDir];
+						toMoveC += dc2[minDir];
+					}
+					
 					map[item.r][item.c].personSize--;
 					map[toMoveR][toMoveC].personSize++;
 
@@ -260,7 +279,7 @@ public class Main {
 							cantWatch[nr][nc] = true;
 							Q.add(new LocationInfo(nr, nc));
 							saveDontMove[d][nr][nc] = 1;
-						}else {
+						} else {
 							Q.add(new LocationInfo(nr, nc));
 							cantWatch[nr][nc] = true;
 							saveDontMove[d][nr][nc] = 1;
@@ -277,18 +296,16 @@ public class Main {
 //		System.out.println(maxDir);
 //		for (int r = 0; r < N; r++) {
 //			for (int c = 0; c < N; c++) {
-//				if(currentLoc.r == r && currentLoc.c == c) {
+//				if (currentLoc.r == r && currentLoc.c == c) {
 //					System.out.print("A ");
-//				}else if(map[r][c].personSize > 0) {
-//					System.out.print(map[r][c].personSize+" ");
-//				}
-//				else if(saveDontMove[maxDir][r][c] == 1) {
+//				} else if (map[r][c].personSize > 0) {
+//					System.out.print(map[r][c].personSize + " ");
+//				} else if (saveDontMove[maxDir][r][c] == 1) {
 //					System.out.print("B ");
+//				} else {
+//					System.out.print(map[r][c].personSize + " ");
 //				}
-//				else {
-//					System.out.print(map[r][c].personSize+" ");
-//				}
-//				
+//
 //			}
 //			System.out.println();
 //		}
