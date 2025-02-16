@@ -318,7 +318,7 @@ public class Main {
 		for(int c = currentLoc.c + 1; c < N; c++) {
 			for(int r = currentLoc.r - (c - currentLoc.c); r <= currentLoc.r + (c - currentLoc.c); r++) {
 				if(checkMap(r, c)) {
-					if(map[r][c].personSize > 0) {
+					if(map[r][c].personSize > 0 && dontMove[r][c] == 0) {
 						count += map[r][c].personSize;
 						checkCantWatch(3, r, c);
 						dontMove[r][c] = 1;
@@ -336,7 +336,7 @@ public class Main {
 		for(int c = currentLoc.c - 1; c >= 0; c--) {
 			for(int r = currentLoc.r - (currentLoc.c - c); r <= currentLoc.r + (currentLoc.c - c); r++) {
 				if(checkMap(r, c)) {
-					if(map[r][c].personSize > 0) {
+					if(map[r][c].personSize > 0 && dontMove[r][c] == 0) {
 						count += map[r][c].personSize;
 						checkCantWatch(2, r, c);
 						dontMove[r][c] = 1;
@@ -354,7 +354,7 @@ public class Main {
 		for(int r = currentLoc.r + 1; r < N; r++) {
 			for(int c = currentLoc.c - (r - currentLoc.r); c <= currentLoc.c + (r - currentLoc.r); c++) {
 				if(checkMap(r, c)) {
-					if(map[r][c].personSize > 0) {
+					if(map[r][c].personSize > 0 && dontMove[r][c] == 0) {
 						count += map[r][c].personSize;
 						checkCantWatch(1, r, c);
 						dontMove[r][c] = 1;
@@ -479,7 +479,7 @@ public class Main {
 		}else {
 			for(int c = nc + 1; c < N; c++) {
 				for (int r = nr + (c - nc) * lookDr[d][disDir[0]] ;
-						r < nr + (c - nc) * lookDr[d][disDir[1]];
+						r <= nr + (c - nc) * lookDr[d][disDir[1]];
 						r++) {
 					if(checkMap(r, c)) {
 						dontMove[r][c] = 2;
