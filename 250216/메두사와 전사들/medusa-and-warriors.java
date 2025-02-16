@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Main {
 	static int dr2[] = { 0, 0, -1, 1 };
 	static int dc[] = { 0, 0, -1, 1 };
 	static int dc2[] = { -1, 1, 0, 0 };
-
+	static int distanceMap[][];
 	static int lookDr[][] = { { -1, -1, -1 }, { 1, 1, 1 }, { -1, 0, 1 }, { -1, 0, 1 } };
 	static int lookDc[][] = { { -1, 0, 1 }, { -1, 0, 1 }, { -1, -1, -1 }, { 1, 1, 1 } };
 	static int[][] dontMove;
@@ -89,6 +90,12 @@ public class Main {
 		}
 
 		map = new Tile[N][N];
+		distanceMap = new int[N][N];
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				distanceMap[r][c] = 987654321;
+			}
+		}
 		dontMove = new int[N][N];
 		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
@@ -103,11 +110,9 @@ public class Main {
 			map[armi[m].r][armi[m].c].personSize++;
 		}
 
-		minDistance = 987654321;
-		ArrayList<LocationInfo> saveRaod = new ArrayList<LocationInfo>();
-		findRoad(currentLoc.r, currentLoc.c, new boolean[N][N], 0, saveRaod);
+		findRoad();
 
-		if (minDistance == 987654321) {
+		if (distanceMap[currentLoc.r][currentLoc.c] == 987654321) {
 			sb.append("-1");
 			bw.write(sb.toString());
 			bw.flush();
@@ -118,36 +123,36 @@ public class Main {
 			bw.flush();
 		}
 
-//		for(int i = 0 ; i <toMove.size();i++){
-//			System.out.println(toMove.get(i).r + " " + toMove.get(i).c);
-//		}
 
 	}
 
-	private static void findRoad(int r, int c, boolean[][] bs, int i, ArrayList<LocationInfo> saveRaod) {
-		if (r == dest.r && c == dest.c && i < minDistance) {
-			toMove = new ArrayList<LocationInfo>();
-			for (LocationInfo item : saveRaod) {
-				LocationInfo newItem = new LocationInfo();
-				newItem.r = item.r;
-				newItem.c = item.c;
-				toMove.add(newItem);
-				minDistance = i;
+	private static void findRoad() {
+		Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
+		boolean[][] visited = new boolean[N][N];
+		int startR = dest.r;
+		int startC = dest.c;
+		visited[startR][startC] = true;
+		Q.add(new LocationInfo(startR, startC));
+		int count = 0;
+		while (!Q.isEmpty()) {
+			int size = Q.size();
+			count++;
+			for (int s = 0; s < size; s++) {
+				LocationInfo item = Q.poll();
+				distanceMap[item.r][item.c] = count;
+				for (int d = 0; d < 4; d++) {
+					int nr = item.r + dr[d];
+					int nc = item.c + dc[d];
+					if (checkMap(nr, nc) && !map[nr][nc].tree && !visited[nr][nc]) {
+						visited[nr][nc] = true;
+						
+						Q.add(new LocationInfo(nr, nc));
+					}
+				}
 			}
 		}
 
-		for (int d = 0; d < 4; d++) {
-			int nr = r + dr[d];
-			int nc = c + dc[d];
 
-			if (checkMap(nr, nc) && !bs[nr][nc] && !map[nr][nc].tree) {
-				bs[nr][nc] = true;
-				saveRaod.add(new LocationInfo(nr, nc));
-				findRoad(nr, nc, bs, i + 1, saveRaod);
-				saveRaod.remove(i);
-				bs[nr][nc] = false;
-			}
-		}
 	}
 
 	private static boolean checkMap(int nr, int nc) {
@@ -157,34 +162,23 @@ public class Main {
 	}
 
 	private static void findDest(StringBuffer sb) {
-		while (moveSeq < toMove.size()) {
+		while (true) {
+//		for(int i=0;i<5;i++) {
 			move();
-//			for (int r = 0; r < N; r++) {
-//				for (int c = 0; c < N; c++) {
-//					if(currentLoc.r == r && currentLoc.c == c) {
-//						System.out.print("2");
-//					}else {
-//						
-//						System.out.print(map[r][c].tree ? "1" : "0");
-//					}
-//				}
-//				System.out.println();
-//			}
-//			System.out.println();
 			int stunCount = watch();
-
 			int MoveCount = armiMove(1);
 			MoveCount += armiMove(2);
 			int killCount = killArmi();
 
-//			System.out.print(MoveCount + " " + stunCount + " " + killCount + "\n");
-			if (moveSeq == toMove.size()) {
+			if (currentLoc.r == dest.r && currentLoc.c == dest.c) {
 				sb.append("0");
+				break;
 			} else {
-
 				sb.append(MoveCount + " " + stunCount + " " + killCount + "\n");
 			}
 		}
+			
+//		}
 
 	}
 
@@ -209,11 +203,11 @@ public class Main {
 				for (int d = 0; d < 4; d++) {
 					int nr = item.r;
 					int nc = item.c;
-					
-					if(seq == 1) {
+
+					if (seq == 1) {
 						nr += dr[d];
 						nc += dc[d];
-					}else {
+					} else {
 						nr += dr2[d];
 						nc += dc2[d];
 					}
@@ -228,16 +222,16 @@ public class Main {
 					}
 				}
 				if (minDir != -1) {
-					int toMoveR = item.r ;
-					int toMoveC = item.c ;
-					if(seq == 1) {
+					int toMoveR = item.r;
+					int toMoveC = item.c;
+					if (seq == 1) {
 						toMoveR += dr[minDir];
 						toMoveC += dc[minDir];
-					}else {
+					} else {
 						toMoveR += dr2[minDir];
 						toMoveC += dc2[minDir];
 					}
-					
+
 					map[item.r][item.c].personSize--;
 					map[toMoveR][toMoveC].personSize++;
 
@@ -293,23 +287,6 @@ public class Main {
 				maxDir = d;
 			}
 		}
-//		System.out.println(maxDir);
-//		for (int r = 0; r < N; r++) {
-//			for (int c = 0; c < N; c++) {
-//				if (currentLoc.r == r && currentLoc.c == c) {
-//					System.out.print("A ");
-//				} else if (map[r][c].personSize > 0) {
-//					System.out.print(map[r][c].personSize + " ");
-//				} else if (saveDontMove[maxDir][r][c] == 1) {
-//					System.out.print("B ");
-//				} else {
-//					System.out.print(map[r][c].personSize + " ");
-//				}
-//
-//			}
-//			System.out.println();
-//		}
-//		System.out.println();
 		dontMove = saveDontMove[maxDir];
 		return maxStuned;
 
@@ -365,9 +342,23 @@ public class Main {
 	}
 
 	private static void move() {
-		currentLoc.r = toMove.get(moveSeq).r;
-		currentLoc.c = toMove.get(moveSeq).c;
+		int minDir = -1;
+		int minDis = 987654321;
+		for (int d = 0; d < 4; d++) {
+			int nr = currentLoc.r + dr[d];
+			int nc = currentLoc.c + dc[d];
 
+			if (checkMap(nr, nc) && distanceMap[nr][nc] < minDis && !map[nr][nc].tree) {
+				minDis = distanceMap[nr][nc];
+				minDir = d;
+			}
+
+		}
+
+//		System.out.println(minDir);
+		currentLoc.r = currentLoc.r + dr[minDir];
+		currentLoc.c = currentLoc.c + dc[minDir];
+//		System.out.println(currentLoc.r + " " + currentLoc.c);
 		if (map[currentLoc.r][currentLoc.c].personSize != 0) {
 			for (int m = 0; m < M; m++) {
 				if (armi[m].r == currentLoc.r && armi[m].c == currentLoc.c) {
@@ -376,7 +367,6 @@ public class Main {
 				}
 			}
 		}
-		moveSeq++;
 	}
 
 }
