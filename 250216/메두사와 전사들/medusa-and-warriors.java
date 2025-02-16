@@ -28,9 +28,7 @@ public class Main {
 	static LocationInfo currentLoc;
 	static LocationInfo dest;
 	static Person[] armi;
-	static ArrayList<LocationInfo> toMove;
 	static int minDistance;
-	static int moveSeq;
 
 	static class Tile {
 		boolean tree;
@@ -117,7 +115,6 @@ public class Main {
 			bw.write(sb.toString());
 			bw.flush();
 		} else {
-			moveSeq = 0;
 			findDest(sb);
 			bw.write(sb.toString());
 			bw.flush();
@@ -249,11 +246,11 @@ public class Main {
 		int maxDir = -1;
 
 		dontMove = new int[N][N];
-		int[][][] saveDontMove = new int[4][N][N];
+		int[][] saveDontMove = new int[N][N];
 		for (int d = 0; d < 4; d++) {
 			boolean[][] cantWatch = new boolean[N][N];
 			int stunCount = 0;
-
+			saveDontMove = new int[N][N];
 			Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
 			LocationInfo currentInfo = new LocationInfo();
 			currentInfo.r = currentLoc.r;
@@ -272,11 +269,11 @@ public class Main {
 							checkCantWatch(cantWatch, d, nr, nc, currentInfo);
 							cantWatch[nr][nc] = true;
 							Q.add(new LocationInfo(nr, nc));
-							saveDontMove[d][nr][nc] = 1;
+							saveDontMove[nr][nc] = 1;
 						} else {
 							Q.add(new LocationInfo(nr, nc));
 							cantWatch[nr][nc] = true;
-							saveDontMove[d][nr][nc] = 1;
+							saveDontMove[nr][nc] = 1;
 						}
 					}
 				}
@@ -285,9 +282,10 @@ public class Main {
 			if (stunCount > maxStuned) {
 				maxStuned = stunCount;
 				maxDir = d;
+				dontMove = saveDontMove;
 			}
 		}
-		dontMove = saveDontMove[maxDir];
+//		dontMove = saveDontMove[maxDir];
 		return maxStuned;
 
 	}
