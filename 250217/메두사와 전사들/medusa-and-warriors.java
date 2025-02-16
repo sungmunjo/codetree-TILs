@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -164,9 +165,11 @@ public class Main {
 //				for (int c = 0; c < N; c++) {
 //					if(r == currentLoc.r && c == currentLoc.c) {
 //						System.out.print("A ");
-//					}else if(map[r][c].personSize > 0) {
+//					}
+//					else if(map[r][c].personSize > 0) {
 //						System.out.print(map[r][c].personSize + " ");
-//					}else {
+//					}
+//					else {
 //						System.out.print(dontMove[r][c] == 1 ? "B " : dontMove[r][c] == 2 ? "C " : "D ");
 //					}
 //					
@@ -263,124 +266,248 @@ public class Main {
 					dontMove[r][c] = 0;
 				}
 			}
-			int stunCount = 0;
-			Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
-			LocationInfo currentInfo = new LocationInfo();
-			currentInfo.r = currentLoc.r;
-			currentInfo.c = currentLoc.c;
-			Q.add(currentInfo);
-			while (!Q.isEmpty()) {
-				LocationInfo item = Q.poll();
-
-				for (int dir = 0; dir < 3; dir++) {
-					int nr = item.r + lookDr[d][dir];
-					int nc = item.c + lookDc[d][dir];
-
-					if (checkMap(nr, nc) && (dontMove[nr][nc] == 0)) {
-						if (map[nr][nc].personSize > 0) {
-							stunCount += map[nr][nc].personSize;
-							checkCantWatch(d, nr, nc, currentInfo);
-							Q.add(new LocationInfo(nr, nc));
-							dontMove[nr][nc] = 1;
-						} else {
-							Q.add(new LocationInfo(nr, nc));
-							dontMove[nr][nc] = 1;
-						}
-					}
+			
+			if(d == 0) {
+				int tempStunCount = lookUp(false);
+				if (tempStunCount > maxStuned) {
+					maxStuned = tempStunCount;
+					maxDir = d;
+				}
+			}else if(d == 1) {
+				int tempStunCount = lookDown(false);
+				if (tempStunCount > maxStuned) {
+					maxStuned = tempStunCount;
+					maxDir = d;
+				}
+			}else if(d == 2) {
+				int tempStunCount = lookLeft(false);
+				if (tempStunCount > maxStuned) {
+					maxStuned = tempStunCount;
+					maxDir = d;
+				}
+			}else {
+				int tempStunCount = lookRight(false);
+				if (tempStunCount > maxStuned) {
+					maxStuned = tempStunCount;
+					maxDir = d;
 				}
 			}
-
-			if (stunCount > maxStuned) {
-				maxStuned = stunCount;
-				maxDir = d;
-				
-			}
 		}
-		checkDontMove(maxStuned, maxDir);
-//		dontMove = saveDontMove[maxDir];
-		return maxStuned;
-
-	}
-
-	private static void checkDontMove(int maxStuned, int maxDir) {
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < N; c++) {
 				dontMove[r][c] = 0;
 			}
 		}
-		Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
-		LocationInfo currentInfo = new LocationInfo();
-		currentInfo.r = currentLoc.r;
-		currentInfo.c = currentLoc.c;
-		Q.add(currentInfo);
-		while (!Q.isEmpty()) {
-			LocationInfo item = Q.poll();
+		if(maxDir == 0) {
+			lookUp(false);
+		}else if(maxDir == 1) {
+			lookDown(false);
+		}else if( maxDir == 2) {
+			lookLeft(false);
+		}else {
+			lookRight(false);
+		}
+//		checkDontMove(maxStuned, maxDir);
+//		dontMove = saveDontMove[maxDir];
+		return maxStuned;
 
-			for (int dir = 0; dir < 3; dir++) {
-				int nr = item.r + lookDr[maxDir][dir];
-				int nc = item.c + lookDc[maxDir][dir];
+	}
 
-				if (checkMap(nr, nc) && (dontMove[nr][nc] == 0)) {
-					if (map[nr][nc].personSize > 0) {
-						checkCantWatch(maxDir, nr, nc, currentInfo);
-						Q.add(new LocationInfo(nr, nc));
-						dontMove[nr][nc] = 1;
-					} else {
-						Q.add(new LocationInfo(nr, nc));
-						dontMove[nr][nc] = 1;
+	private static int lookRight(boolean b) {
+		int count = 0;
+		for(int c = currentLoc.c + 1; c < N; c++) {
+			for(int r = currentLoc.r - (c - currentLoc.c); r <= currentLoc.r + (c - currentLoc.c); r++) {
+				if(checkMap(r, c)) {
+					if(map[r][c].personSize > 0) {
+						count += map[r][c].personSize;
+						checkCantWatch(3, r, c);
+						dontMove[r][c] = 1;
+					}else if(dontMove[r][c] == 0){
+						dontMove[r][c] = 1;
 					}
 				}
 			}
 		}
+		return count;
+	}
+
+	private static int lookLeft(boolean b) {
+		int count = 0;
+		for(int c = currentLoc.c - 1; c >= 0; c--) {
+			for(int r = currentLoc.r - (currentLoc.c - c); r <= currentLoc.r + (currentLoc.c - c); r++) {
+				if(checkMap(r, c)) {
+					if(map[r][c].personSize > 0) {
+						count += map[r][c].personSize;
+						checkCantWatch(2, r, c);
+						dontMove[r][c] = 1;
+					}else if(dontMove[r][c] == 0){
+						dontMove[r][c] = 1;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	private static int lookDown(boolean b) {
+		int count = 0;
+		for(int r = currentLoc.r + 1; r < N; r++) {
+			for(int c = currentLoc.c - (r - currentLoc.r); c <= currentLoc.c + (r - currentLoc.r); c++) {
+				if(checkMap(r, c)) {
+					if(map[r][c].personSize > 0) {
+						count += map[r][c].personSize;
+						checkCantWatch(1, r, c);
+						dontMove[r][c] = 1;
+					}else if(dontMove[r][c] == 0){
+						dontMove[r][c] = 1;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	private static int lookUp(boolean b) {
+		int count = 0;
+		for(int r = currentLoc.r - 1; r >= 0; r--) {
+			for(int c = currentLoc.c - (currentLoc.r - r); c <= currentLoc.c + (currentLoc.r - r); c++) {
+				if(checkMap(r, c)) {
+					if(map[r][c].personSize > 0 && dontMove[r][c] == 0) {
+						count += map[r][c].personSize;
+						checkCantWatch(0, r, c);
+						dontMove[r][c] = 1;
+					}else if(dontMove[r][c] == 0){
+						dontMove[r][c] = 1;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	private static void checkDontMove(int maxStuned, int maxDir) {
+//		for (int r = 0; r < N; r++) {
+//			for (int c = 0; c < N; c++) {
+//				dontMove[r][c] = 0;
+//			}
+//		}
+//		Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
+//		LocationInfo currentInfo = new LocationInfo();
+//		currentInfo.r = currentLoc.r;
+//		currentInfo.c = currentLoc.c;
+//		Q.add(currentInfo);
+//		while (!Q.isEmpty()) {
+//			LocationInfo item = Q.poll();
+//
+//			for (int dir = 0; dir < 3; dir++) {
+//				int nr = item.r + lookDr[maxDir][dir];
+//				int nc = item.c + lookDc[maxDir][dir];
+//
+//				if (checkMap(nr, nc) && (dontMove[nr][nc] == 0)) {
+//					if (map[nr][nc].personSize > 0) {
+//						checkCantWatch(maxDir, nr, nc, currentInfo);
+//						Q.add(new LocationInfo(nr, nc));
+//						dontMove[nr][nc] = 1;
+//					} else {
+//						Q.add(new LocationInfo(nr, nc));
+//						dontMove[nr][nc] = 1;
+//					}
+//				}
+//			}
+//		}
 
 	}
 
-	private static void checkCantWatch(int d, int nr, int nc, LocationInfo currentInfo) {
+	private static void checkCantWatch(int d, int nr, int nc) {
 		if (d < 2) {
-			if (nc > currentInfo.c) {
+			if (nc > currentLoc.c) {
 				int[] disDir = { 1, 2 };
 				checkDisable(disDir, d, nr, nc);
-			} else if (nc < currentInfo.c) {
+			} else if (nc < currentLoc.c) {
 				int[] disDir = { 0, 1 };
 				checkDisable(disDir, d, nr, nc);
 			} else {
-				int[] disDir = { 1 };
+				int[] disDir = { 1, 1 };
 				checkDisable(disDir, d, nr, nc);
 			}
 		} else {
-			if (nr > currentInfo.r) {
+			if (nr > currentLoc.r) {
 				int[] disDir = { 1, 2 };
 				checkDisable(disDir, d, nr, nc);
-			} else if (nr < currentInfo.r) {
+			} else if (nr < currentLoc.r) {
 				int[] disDir = { 0, 1 };
 				checkDisable(disDir, d, nr, nc);
 			} else {
-				int[] disDir = { 1 };
+				int[] disDir = { 1, 1 };
 				checkDisable(disDir, d, nr, nc);
 			}
 		}
 	}
 
 	private static void checkDisable(int[] disDir, int d, int nr, int nc) {
-		Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
-		LocationInfo currentInfo = new LocationInfo();
-		currentInfo.r = nr;
-		currentInfo.c = nc;
-		Q.add(currentInfo);
-		while (!Q.isEmpty()) {
-			LocationInfo item = Q.poll();
-
-			for (int index = 0; index < disDir.length; index++) {
-				int nnr = item.r + lookDr[d][disDir[index]];
-				int nnc = item.c + lookDc[d][disDir[index]];
-
-				if (checkMap(nnr, nnc)) {
-					dontMove[nnr][nnc] = 2;
-					Q.add(new LocationInfo(nnr, nnc));
+		if(d == 0) {
+			for(int r = nr - 1; r >= 0; r--) {
+				for (int c = nc + (nr - r) * lookDc[d][disDir[0]] ;
+						c <= nc + (nr - r) * lookDc[d][disDir[1]];
+						c++) {
+					if(checkMap(r, c)) {
+						dontMove[r][c] = 2;
+					}
 				}
 			}
-
+			
+		}else if(d == 1){
+			for(int r = nr + 1; r <  N; r++) {
+				for (int c = nc + (r - nr) * lookDc[d][disDir[0]] ;
+						c <= nc + (r - nr) * lookDc[d][disDir[1]];
+						c++) {
+					if(checkMap(r, c)) {
+						dontMove[r][c] = 2;
+					}
+				}
+			}
+		}else if(d == 2) {
+			for(int c = nc - 1; c >= 0; c--) {
+				for (int r = nr + (nc - c) * lookDr[d][disDir[0]] ;
+						r <= nr + (nc - c) * lookDr[d][disDir[1]];
+						r++) {
+					if(checkMap(r, c)) {
+						dontMove[r][c] = 2;
+					}
+				}
+			}
+		}else {
+			for(int c = nc + 1; c < N; c++) {
+				for (int r = nr + (c - nc) * lookDr[d][disDir[0]] ;
+						r < nr + (c - nc) * lookDr[d][disDir[1]];
+						r++) {
+					if(checkMap(r, c)) {
+						dontMove[r][c] = 2;
+					}
+				}
+			}
 		}
+		
+		
+//		Queue<LocationInfo> Q = new LinkedList<LocationInfo>();
+//		LocationInfo currentInfo = new LocationInfo();
+//		currentInfo.r = nr;
+//		currentInfo.c = nc;
+//		Q.add(currentInfo);
+//		while (!Q.isEmpty()) {
+//			LocationInfo item = Q.poll();
+//
+//			for (int index = 0; index < disDir.length; index++) {
+//				int nnr = item.r + lookDr[d][disDir[index]];
+//				int nnc = item.c + lookDc[d][disDir[index]];
+//
+//				if (checkMap(nnr, nnc)) {
+//					dontMove[nnr][nnc] = 2;
+//					Q.add(new LocationInfo(nnr, nnc));
+//				}
+//			}
+//
+//		}
 
 	}
 
